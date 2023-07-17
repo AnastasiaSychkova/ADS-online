@@ -20,11 +20,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, UserDetailsManager manager, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, UserDetailsManager manager, PasswordEncoder encoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.manager = manager;
         this.encoder = encoder;
+        this.userMapper = userMapper;
     }
 
     private User setPasswordInDb(String login, String newPassword) {
@@ -68,7 +70,7 @@ public class UserService {
         if(user == null) {
             return null;
         }
-        return UserMapper.userIntoUserDto(user);
+        return userMapper.userIntoUserDto(user);
     }
 
     public User getUserByLogin(String login){
@@ -81,7 +83,7 @@ public class UserService {
             return null;
         }
 
-        userRepository.save(UserMapper.updateUserIntoUser(user, updateUser));
-        return UserMapper.userIntoUpdateUser(user);
+        userRepository.save(userMapper.updateUserIntoUser(user, updateUser));
+        return userMapper.userIntoUpdateUser(user);
     }
 }

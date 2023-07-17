@@ -16,14 +16,16 @@ public class AdService {
 
     private final AdRepository adRepository;
     private final UserService userService;
+    private final AdMapper adMapper;
 
-    public AdService(AdRepository adRepository, UserService userService) {
+    public AdService(AdRepository adRepository, UserService userService, AdMapper adMapper) {
         this.adRepository = adRepository;
         this.userService = userService;
+        this.adMapper = adMapper;
     }
 
     public AdsDto getAllAds() {
-        return AdMapper.adIntoAdsDto(adRepository.findAll());
+        return adMapper.adIntoAdsDto(adRepository.findAll());
     }
 
 
@@ -32,7 +34,7 @@ public class AdService {
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
 
         adRepository.save(ad);
-        return AdMapper.adIntoAdDto(ad);
+        return adMapper.adIntoAdDto(ad);
     }
 
     public FullAdDto getFullAd(Long id) {
@@ -40,7 +42,7 @@ public class AdService {
         if (ad == null) {
             return null;
         }
-        return AdMapper.adIntoFullAdDto(ad);
+        return adMapper.adIntoFullAdDto(ad);
     }
 
     public boolean deleteAd(Long id) {
@@ -64,12 +66,12 @@ public class AdService {
 
         adRepository.save(ad);
 
-        return AdMapper.adIntoAdDto(ad);
+        return adMapper.adIntoAdDto(ad);
     }
 
     public AdsDto getMyAds(String login) {
         User user = userService.getUserByLogin(login);
-        return AdMapper.adIntoAdsDto(user.getUserAds());
+        return adMapper.adIntoAdsDto(user.getUserAds());
     }
 
     public Ad findAdById(Long id){

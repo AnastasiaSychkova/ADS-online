@@ -19,18 +19,20 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final AdService adService;
+    private final CommentMapper commentMapper;
 
-    public CommentService(CommentRepository commentRepository, UserService userService, AdService adService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, AdService adService, CommentMapper commentMapper) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.adService = adService;
+        this.commentMapper = commentMapper;
     }
 
     public CommentsDto getComments(Long id) {
         List<CommentsDto> commentsDtos = new ArrayList<>();
         List<Comment> comments = commentRepository.findAllByAdId(id);
 
-        return CommentMapper.listCommentIntoCommentsDto(comments);
+        return commentMapper.listCommentIntoCommentsDto(comments);
     }
 
     public CommentDto createComment(Long id, String login, CreateOrUpdateComment createOrUpdateComment) {
@@ -47,7 +49,7 @@ public class CommentService {
         comment.setText(createOrUpdateComment.getText());
 
         commentRepository.save(comment);
-        return CommentMapper.commentIntoCommentDto(comment);
+        return commentMapper.commentIntoCommentDto(comment);
     }
 
     public boolean deleteComment(Long commentId) {
@@ -65,6 +67,6 @@ public class CommentService {
         }
 
         comment.setText(createOrUpdateComment.getText());
-        return CommentMapper.commentIntoCommentDto(comment);
+        return commentMapper.commentIntoCommentDto(comment);
     }
 }
