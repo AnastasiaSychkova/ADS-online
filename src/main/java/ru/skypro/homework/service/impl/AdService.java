@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.ad.AdDto;
@@ -29,6 +30,7 @@ public class AdService {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(userService.getUserByLogin(login))")
     public AdDto createAd(String login, MultipartFile image, CreateOrUpdateAdDto createOrUpdateAdDto) {
         User user = userService.getUserByLogin(login);
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
@@ -37,6 +39,7 @@ public class AdService {
         return adMapper.adIntoAdDto(ad);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
     public FullAdDto getFullAd(Long id) {
         Ad ad = adRepository.findAdById(id);
         if (ad == null) {
@@ -45,6 +48,7 @@ public class AdService {
         return adMapper.adIntoFullAdDto(ad);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
     public boolean deleteAd(Long id) {
         if (!adRepository.existsById(id)) {
             return false;
@@ -53,6 +57,7 @@ public class AdService {
         return true;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
     public AdDto updateAd(Long id, CreateOrUpdateAdDto createOrUpdateAdDto) {
         Ad ad = adRepository.findAdById(id);
 
@@ -69,13 +74,19 @@ public class AdService {
         return adMapper.adIntoAdDto(ad);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(userService.getUserByLogin(login))")
     public AdsDto getMyAds(String login) {
         User user = userService.getUserByLogin(login);
         return adMapper.adIntoAdsDto(user.getUserAds());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
     public Ad findAdById(Long id){
         return adRepository.findAdById(id);
+    }
+
+    public String getAdAuthorName(Long id){
+        return adRepository.findById(id).map(ad -> ad.getAuthor().getEmail()).orElse(null);
     }
 
     //public void updateImage(Long id, MultipartFile image) {

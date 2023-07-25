@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.comment.CommentDto;
 import ru.skypro.homework.dto.comment.CommentsDto;
@@ -28,6 +29,7 @@ public class CommentService {
         this.commentMapper = commentMapper;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
     public CommentsDto getComments(Long id) {
         List<CommentsDto> commentsDtos = new ArrayList<>();
         List<Comment> comments = commentRepository.findAllByAdId(id);
@@ -35,6 +37,7 @@ public class CommentService {
         return commentMapper.listCommentIntoCommentsDto(comments);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
     public CommentDto createComment(Long id, String login, CreateOrUpdateComment createOrUpdateComment) {
         Comment comment = new Comment();
         Ad ad = adService.findAdById(id);
@@ -52,21 +55,27 @@ public class CommentService {
         return commentMapper.commentIntoCommentDto(comment);
     }
 
-    public boolean deleteComment(Long commentId) {
-        if (!commentRepository.existsById(commentId)) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
+    public boolean deleteComment(Long id) {
+        if (!commentRepository.existsById(id)) {
             return false;
         }
-        commentRepository.deleteById(commentId);
+        commentRepository.deleteById(id);
         return true;
     }
 
-    public CommentDto updateComment(Long commentId, CreateOrUpdateComment createOrUpdateComment){
-        Comment comment = commentRepository.findCommentById(commentId);
-        if(comment == null){
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
+    public CommentDto updateComment(Long id, CreateOrUpdateComment createOrUpdateComment) {
+        Comment comment = commentRepository.findCommentById(id);
+        if (comment == null) {
             return null;
         }
 
         comment.setText(createOrUpdateComment.getText());
         return commentMapper.commentIntoCommentDto(comment);
+    }
+
+    public String authorNameByCommentId(Long id){
+        return commentRepository.findById(id).map(comment -> comment.getAuthor().getEmail()).orElse(null);
     }
 }

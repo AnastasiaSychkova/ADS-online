@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class UserService {
         }
 
         User user = setPasswordInDb(login, this.encoder.encode(newPassword.getNewPassword()));
-        if(user == null){
+        if (user == null) {
             return false;
         }
 
@@ -60,26 +61,26 @@ public class UserService {
         return true;
     }
 
-    public void saveUser(Register register, Role role,String encoderPassword){
+    public void saveUser(Register register, Role role, String encoderPassword) {
         userRepository.save(new User(register.getUsername(), register.getFirstName(), register.getLastName(), encoderPassword, register.getPhone(), LocalDate.now(), role));
     }
 
 
     public UserDto getUserDto(String login) {
         User user = userRepository.findUserByEmailIgnoreCase(login);
-        if(user == null) {
+        if (user == null) {
             return null;
         }
         return userMapper.userIntoUserDto(user);
     }
 
-    public User getUserByLogin(String login){
+    public User getUserByLogin(String login) {
         return userRepository.findUserByEmailIgnoreCase(login);
     }
 
     public UpdateUser updateUser(UpdateUser updateUser, String login) {
         User user = userRepository.findUserByEmailIgnoreCase(login);
-        if(user == null) {
+        if (user == null) {
             return null;
         }
 
