@@ -31,8 +31,8 @@ public class AdController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdDto> addAds(@RequestPart("image") MultipartFile image,
-                                        @RequestPart("properties") CreateOrUpdateAdDto createOrUpdateAdDto) {
+    public ResponseEntity<AdDto> addAds(@RequestPart("properties") CreateOrUpdateAdDto createOrUpdateAdDto,
+                                        @RequestPart("image") MultipartFile image) {
 
         AdDto adDto = adService.createAd(SecurityContextHolder.getContext().getAuthentication().getName(), image, createOrUpdateAdDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();

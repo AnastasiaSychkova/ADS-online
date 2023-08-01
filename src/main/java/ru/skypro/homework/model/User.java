@@ -3,6 +3,7 @@ package ru.skypro.homework.model;
 import liquibase.repackaged.org.apache.commons.lang3.builder.ToStringExclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
@@ -25,16 +26,17 @@ public class User {
     private LocalDate registerDate;
     @Enumerated(EnumType.STRING)
     private Role role;
-   // @OneToOne
-   // @JoinColumn(name = "image_id")
-    //private Image image;
-   @OneToMany(
-           mappedBy = "author",
-           cascade = CascadeType.ALL,
-           orphanRemoval = true
-   )
-   @ToStringExclude
-   private List<Ad> userAds;
+    //@OneToOne(orphanRemoval = true)
+    //@JoinColumn(name = "image_id")
+    @Lob
+    private byte[] image;
+    @OneToMany(
+            mappedBy = "author",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @ToStringExclude
+    private List<Ad> userAds;
 
     public User(String email, String firstName, String lastName, String password, String phone,
                 LocalDate registerDate, Role role) {

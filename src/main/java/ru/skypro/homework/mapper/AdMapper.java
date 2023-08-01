@@ -12,7 +12,7 @@ import java.util.List;
 public class AdMapper {
 
     public AdDto adIntoAdDto(Ad ad){
-        return new AdDto(ad.getAuthor().getId(), null, ad.getId(), ad.getPrice(), ad.getTitle());
+        return new AdDto(ad.getAuthor().getId(), ad.getImage(), ad.getId(), ad.getPrice(), ad.getTitle());
     }
 
     public AdsDto adIntoAdsDto(List<Ad> ads){
@@ -30,6 +30,6 @@ public class AdMapper {
     }
 
     public FullAdDto adIntoFullAdDto(Ad ad){
-        return new FullAdDto(ad.getId(), ad.getAuthor().getFirstName(), ad.getAuthor().getLastName(), ad.getDescription(), ad.getAuthor().getEmail(), null, ad.getAuthor().getPhone(), ad.getPrice(), ad.getTitle());
+        return new FullAdDto(ad.getId(), ad.getAuthor().getFirstName(), ad.getAuthor().getLastName(), ad.getDescription(), ad.getAuthor().getEmail(), ad.getImage(), ad.getAuthor().getPhone(), ad.getPrice(), ad.getTitle());
     }
 }

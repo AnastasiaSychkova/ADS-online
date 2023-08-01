@@ -11,7 +11,7 @@ import java.util.List;
 public class CommentMapper {
 
     public CommentDto commentIntoCommentDto(Comment comment){
-        return new CommentDto(comment.getAuthor().getId(), null, comment.getAuthor().getFirstName(), comment.getCreatedAt(), comment.getId(), comment.getText());
+        return new CommentDto(comment.getAuthor().getId(), comment.getAuthor().getImage(), comment.getAuthor().getFirstName(), comment.getCreatedAt(), comment.getId(), comment.getText());
     }
 
     public CommentsDto listCommentIntoCommentsDto(List<Comment> comments){

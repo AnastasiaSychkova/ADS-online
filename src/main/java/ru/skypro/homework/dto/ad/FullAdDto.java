@@ -3,6 +3,7 @@ package ru.skypro.homework.dto.ad;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skypro.homework.model.Image;
 
 @Data
 public class FullAdDto {
@@ -11,12 +12,12 @@ public class FullAdDto {
     private String authorLastName;
     private String description;
     private String email;
-    private String image;
+    private Image image;
     private String phone;
     private int price;
     private String title;
 
-    public FullAdDto(Long pk, String authorFirstName, String authorLastName, String description, String email, String image, String phone, int price, String title) {
+    public FullAdDto(Long pk, String authorFirstName, String authorLastName, String description, String email, Image image, String phone, int price, String title) {
         this.pk = pk;
         this.authorFirstName = authorFirstName;
         this.authorLastName = authorLastName;

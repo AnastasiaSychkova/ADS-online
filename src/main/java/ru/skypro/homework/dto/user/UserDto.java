@@ -3,6 +3,7 @@ package ru.skypro.homework.dto.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skypro.homework.model.Image;
 
 @Data
 public class UserDto {
@@ -11,9 +12,9 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String phone;
-    private String image;
+    private byte[] image;
 
-    public UserDto(Long id, String email, String firstName, String lastName, String phone, String image) {
+    public UserDto(Long id, String email, String firstName, String lastName, String phone, byte[] image) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
