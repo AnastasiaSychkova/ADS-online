@@ -12,9 +12,9 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String phone;
-    private byte[] image;
+    private String image;
 
-    public UserDto(Long id, String email, String firstName, String lastName, String phone, byte[] image) {
+    public UserDto(Long id, String email, String firstName, String lastName, String phone, String image) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;

@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import liquibase.repackaged.org.apache.commons.lang3.builder.ToStringExclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
 
@@ -26,10 +28,10 @@ public class User {
     private LocalDate registerDate;
     @Enumerated(EnumType.STRING)
     private Role role;
-    //@OneToOne(orphanRemoval = true)
-    //@JoinColumn(name = "image_id")
-    @Lob
-    private byte[] image;
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Image image;
     @OneToMany(
             mappedBy = "author",
             cascade = CascadeType.ALL,

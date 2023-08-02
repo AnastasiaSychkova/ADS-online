@@ -12,12 +12,12 @@ public class FullAdDto {
     private String authorLastName;
     private String description;
     private String email;
-    private Image image;
+    private String image;
     private String phone;
     private int price;
     private String title;
 
-    public FullAdDto(Long pk, String authorFirstName, String authorLastName, String description, String email, Image image, String phone, int price, String title) {
+    public FullAdDto(Long pk, String authorFirstName, String authorLastName, String description, String email, String image, String phone, int price, String title) {
         this.pk = pk;
         this.authorFirstName = authorFirstName;
         this.authorLastName = authorLastName;

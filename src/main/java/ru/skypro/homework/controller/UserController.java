@@ -22,9 +22,11 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final ImageService imageService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ImageService imageService) {
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @PostMapping("/setPassword")
@@ -55,12 +57,7 @@ public class UserController {
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestBody MultipartFile image) throws IOException {
-        userService.updateUserAvatar(image, SecurityContextHolder.getContext().getAuthentication().getName());
+        imageService.updateUserAvatar(image, SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value = "/images/{id}", produces = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public byte[] getImage(@PathVariable Long id){
-        return userService.getImg(id);
     }
 }

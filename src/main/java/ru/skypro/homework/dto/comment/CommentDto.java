@@ -6,13 +6,13 @@ import ru.skypro.homework.model.Image;
 @Data
 public class CommentDto {
     private Long authorId;
-    private byte[] authorImage;
+    private String authorImage;
     private String authorFirstName;
     private Long createdAt;
     private Long pk;
     private String text;
 
-    public CommentDto(Long authorId, byte[] authorImage, String authorFirstName, Long createdAt, Long pk, String text) {
+    public CommentDto(Long authorId, String authorImage, String authorFirstName, Long createdAt, Long pk, String text) {
         this.authorId = authorId;
         this.authorImage = authorImage;
         this.authorFirstName = authorFirstName;

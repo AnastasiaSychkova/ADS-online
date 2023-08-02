@@ -8,12 +8,12 @@ import ru.skypro.homework.model.Image;
 @Data
 public class AdDto {
     private Long author;
-    private Image image;
+    private String image;
     private Long pk;
     private int price;
     private String title;
 
-    public AdDto(Long author, Image image, Long pk, int price, String title) {
+    public AdDto(Long author, String image, Long pk, int price, String title) {
         this.author = author;
         this.image = image;
         this.pk = pk;

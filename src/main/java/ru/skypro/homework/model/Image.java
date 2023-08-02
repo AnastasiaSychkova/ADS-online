@@ -3,6 +3,7 @@ package ru.skypro.homework.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -16,9 +17,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String originalFileName;
-    private Long size;
     private String contentType;
     @Lob
+    @Type(type = "org.hibernate.type.ImageType")
     private byte[] bytes;
 }

@@ -10,9 +10,8 @@ import java.io.IOException;
 
 @Service
 public class ImageService {
-    /*private final ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
     private final UserService userService;
-
     public ImageService(ImageRepository imageRepository, UserService userService) {
         this.imageRepository = imageRepository;
         this.userService = userService;
@@ -25,7 +24,6 @@ public class ImageService {
             imageRepository.save(image);
         }
 
-
         User user = userService.getUserByLogin(login);
 
         user.setImage(image);
@@ -35,10 +33,21 @@ public class ImageService {
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
         image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
         image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
         image.setBytes(file.getBytes());
         return image;
-    }*/
+    }
+
+    public Image updateAdImage(MultipartFile file) throws IOException {
+        Image image = null;
+        if (file.getSize() != 0) {
+            image = toImageEntity(file);
+            imageRepository.save(image);
+        }
+        return image;
+    }
+
+    public byte[] getImage(Long id){
+        return imageRepository.findById(id).get().getBytes();
+    }
 }

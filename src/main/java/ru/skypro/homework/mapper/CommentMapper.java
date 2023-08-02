@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.comment.CommentDto;
 import ru.skypro.homework.dto.comment.CommentsDto;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.Image;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.List;
 public class CommentMapper {
 
     public CommentDto commentIntoCommentDto(Comment comment){
-        return new CommentDto(comment.getAuthor().getId(), comment.getAuthor().getImage(), comment.getAuthor().getFirstName(), comment.getCreatedAt(), comment.getId(), comment.getText());
+        Image image = comment.getAuthor().getImage();
+        return new CommentDto(comment.getAuthor().getId(), image == null? null: ("/images/" + image.getId()), comment.getAuthor().getFirstName(), comment.getCreatedAt(), comment.getId(), comment.getText());
     }
 
     public CommentsDto listCommentIntoCommentsDto(List<Comment> comments){

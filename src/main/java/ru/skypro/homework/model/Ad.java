@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import liquibase.repackaged.org.apache.commons.lang3.builder.ToStringExclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +22,7 @@ public class Ad {
     private User author;
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Image image;
 
     private int price;

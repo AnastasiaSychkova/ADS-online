@@ -1,22 +1,26 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.dto.user.NewPassword;
 import ru.skypro.homework.dto.user.UpdateUser;
 import ru.skypro.homework.dto.user.UserDto;
 import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 
 
 @Service
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final UserDetailsManager manager;
@@ -87,4 +91,9 @@ public class UserService {
         userRepository.save(userMapper.updateUserIntoUser(user, updateUser));
         return userMapper.userIntoUpdateUser(user);
     }
+
+    public void updateUserImageDb(User user) {
+        userRepository.save(user);
+    }
+
 }
