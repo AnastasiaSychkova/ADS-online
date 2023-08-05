@@ -3,6 +3,7 @@ package ru.skypro.homework.dto.ad;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skypro.homework.model.Image;
 
 @Data
 public class AdDto {

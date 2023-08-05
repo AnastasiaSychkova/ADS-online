@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.user.NewPassword;
 import ru.skypro.homework.dto.user.UpdateUser;
 import ru.skypro.homework.dto.user.UserDto;
+import ru.skypro.homework.service.impl.ImageService;
 import ru.skypro.homework.service.impl.UserService;
 
 import java.io.IOException;
@@ -21,9 +22,11 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final ImageService imageService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ImageService imageService) {
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @PostMapping("/setPassword")
@@ -54,6 +57,7 @@ public class UserController {
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestBody MultipartFile image) throws IOException {
+        imageService.updateUserAvatar(image, SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok().build();
     }
 }

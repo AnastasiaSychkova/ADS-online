@@ -12,6 +12,9 @@ import ru.skypro.homework.dto.ad.AdsDto;
 import ru.skypro.homework.dto.ad.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ad.FullAdDto;
 import ru.skypro.homework.service.impl.AdService;
+import ru.skypro.homework.service.impl.ImageService;
+
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -31,8 +34,8 @@ public class AdController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdDto> addAds(@RequestPart("image") MultipartFile image,
-                                        @RequestPart("properties") CreateOrUpdateAdDto createOrUpdateAdDto) {
+    public ResponseEntity<AdDto> addAds(@RequestPart("properties") CreateOrUpdateAdDto createOrUpdateAdDto,
+                                        @RequestPart("image") MultipartFile image) throws IOException {
 
         AdDto adDto = adService.createAd(SecurityContextHolder.getContext().getAuthentication().getName(), image, createOrUpdateAdDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -73,7 +76,8 @@ public class AdController {
 
     @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateImage(@PathVariable("id") Long id,
-                                         @RequestPart MultipartFile image) {
+                                         @RequestPart MultipartFile image) throws IOException {
+        adService.updateAdImageInDb(image, id);
         return ResponseEntity.ok().build();
     }
 }

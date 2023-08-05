@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import liquibase.repackaged.org.apache.commons.lang3.builder.ToStringExclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,10 +20,10 @@ public class Ad {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
-
-    //@OneToOne
-    //@JoinColumn(name ="image_id")
-    //private Image image;
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Image image;
 
     private int price;
 
@@ -30,11 +32,11 @@ public class Ad {
     private String description;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name= "user_id")
+    @JoinColumn(name = "user_id")
     @ToStringExclude
     private List<Comment> adsComments;
 
-    public Ad(User author, int price, String title, String description){
+    public Ad(User author, int price, String title, String description) {
         this.author = author;
         this.price = price;
         this.title = title;

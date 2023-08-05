@@ -9,19 +9,24 @@ import ru.skypro.homework.dto.ad.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ad.FullAdDto;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
+
+import java.io.IOException;
 
 @Service
 public class AdService {
 
     private final AdRepository adRepository;
     private final UserService userService;
+    private final ImageService imageService;
     private final AdMapper adMapper;
 
-    public AdService(AdRepository adRepository, UserService userService, AdMapper adMapper) {
+    public AdService(AdRepository adRepository, UserService userService, ImageService imageService, AdMapper adMapper) {
         this.adRepository = adRepository;
         this.userService = userService;
+        this.imageService = imageService;
         this.adMapper = adMapper;
     }
 
@@ -31,11 +36,16 @@ public class AdService {
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(userService.getUserByLogin(login))")
-    public AdDto createAd(String login, MultipartFile image, CreateOrUpdateAdDto createOrUpdateAdDto) {
+    public AdDto createAd(String login, MultipartFile image, CreateOrUpdateAdDto createOrUpdateAdDto) throws IOException {
         User user = userService.getUserByLogin(login);
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
-
         adRepository.save(ad);
+
+        Image image1 = imageService.updateAdImage(image);
+
+        ad.setImage(image1);
+        adRepository.save(ad);
+
         return adMapper.adIntoAdDto(ad);
     }
 
@@ -89,6 +99,11 @@ public class AdService {
         return adRepository.findById(id).map(ad -> ad.getAuthor().getEmail()).orElse(null);
     }
 
-    //public void updateImage(Long id, MultipartFile image) {
-    //}
+    public void updateAdImageInDb(MultipartFile file, Long id) throws IOException {
+        Image image = imageService.updateAdImage(file);
+        Ad ad = findAdById(id);
+
+        ad.setImage(image);
+        adRepository.save(ad);
+    }
 }
