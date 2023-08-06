@@ -1,4 +1,4 @@
-![logo](https://skyengpublic.notion.site/64113e0a2641475c9ad9bea93144afff)
+![logo](https://github.com/AnastasiaSychkova/HelloWorld/commit/db0c035a8e96376156ed8c0606a14005fc4253f5)
 # ADS-online
 Серверная часть приложения **ADS-online** - платформы для перепродажи вещей
 ## Стек технологий
