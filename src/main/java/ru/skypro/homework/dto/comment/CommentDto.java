@@ -1,7 +1,6 @@
 package ru.skypro.homework.dto.comment;
 
 import lombok.Data;
-import ru.skypro.homework.model.Image;
 
 @Data
 public class CommentDto {

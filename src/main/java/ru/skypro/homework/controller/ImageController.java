@@ -16,15 +16,6 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    /* @GetMapping(value = "/images/{id}", produces = {MediaType.MULTIPART_FORM_DATA_VALUE})
-     public ResponseEntity<?> getImage(@PathVariable Long id) {
-         Image image = imageRepository.findById(id).orElse(null);
-         return ResponseEntity.ok()
-                 .header("fileName", image.getOriginalFileName())
-                 .contentType(MediaType.valueOf(image.getContentType()))
-                 .contentLength(image.getSize())
-                 .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
-     }*/
     @GetMapping(value = "/images/{id}", produces = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public byte[] getImage(@PathVariable Long id) {
         return imageService.getImage(id);

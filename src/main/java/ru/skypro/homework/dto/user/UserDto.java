@@ -1,9 +1,6 @@
 package ru.skypro.homework.dto.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.skypro.homework.model.Image;
 
 @Data
 public class UserDto {
