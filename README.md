@@ -1,4 +1,4 @@
-![logo](https://github.com/AnastasiaSychkova/HelloWorld/commit/db0c035a8e96376156ed8c0606a14005fc4253f5)
+![logo](https://github.com/AnastasiaSychkova/HelloWorld/blob/master/Screenshot%202022-03-14%20at%2015.10.20.png)
 # ADS-online
 Серверная часть приложения **ADS-online** - платформы для перепродажи вещей
 ## Стек технологий
