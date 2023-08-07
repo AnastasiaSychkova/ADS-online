@@ -8,7 +8,7 @@ import ru.skypro.homework.model.User;
 public class UserMapper {
 
     public UserDto userIntoUserDto(User user){
-        return new UserDto(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getImage() != null? ("/images/" + user.getImage().getId()):null);
+        return new UserDto(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getImage() == null? null: ("/images/" + user.getImage().getId()));
     }
     public User updateUserIntoUser(User user, UpdateUser updateUser){
         user.setFirstName(updateUser.getFirstName());

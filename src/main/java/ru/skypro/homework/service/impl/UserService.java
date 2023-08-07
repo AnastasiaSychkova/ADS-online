@@ -3,32 +3,37 @@ package ru.skypro.homework.service.impl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.dto.user.NewPassword;
 import ru.skypro.homework.dto.user.UpdateUser;
 import ru.skypro.homework.dto.user.UserDto;
 import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 
-import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 
 
 @Service
-@Transactional
+//@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
+    private final ImageService imageService;
 
-    public UserService(UserRepository userRepository, UserDetailsManager manager, PasswordEncoder encoder, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserDetailsManager manager, PasswordEncoder encoder, UserMapper userMapper, ImageService imageService) {
         this.userRepository = userRepository;
         this.manager = manager;
         this.encoder = encoder;
         this.userMapper = userMapper;
+        this.imageService = imageService;
     }
 
     private User setPasswordInDb(String login, String newPassword) {
@@ -89,8 +94,19 @@ public class UserService {
         return userMapper.userIntoUpdateUser(user);
     }
 
-    public void updateUserImageDb(User user) {
-        userRepository.save(user);
-    }
+    //public void updateUserImageDb(User user) {
+     //   userRepository.save(user);
+    //}
 
+    public void updateUserImageInDb(MultipartFile file, String login) {
+        try {
+            Image image = imageService.updateImage(file);
+            User user = userRepository.findUserByEmailIgnoreCase(login);
+
+            user.setImage(image);
+            userRepository.save(user);
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

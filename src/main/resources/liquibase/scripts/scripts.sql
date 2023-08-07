@@ -21,6 +21,7 @@ CREATE TABLE users
     role          VARCHAR(255),
     image_id         BIGINT,
     FOREIGN KEY (image_id) REFERENCES images (id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE ads
@@ -33,6 +34,7 @@ CREATE TABLE ads
     description varchar(255),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (image_id) REFERENCES images (id)
+        ON DELETE CASCADE
 );
 
 
@@ -45,4 +47,5 @@ CREATE TABLE comments
     ad_id      BIGINT,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (ad_id) REFERENCES ads (id)
+        ON DELETE CASCADE
 );

@@ -17,9 +17,11 @@ public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
+
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "image_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -33,6 +35,7 @@ public class Ad {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToStringExclude
     private List<Comment> adsComments;
 
