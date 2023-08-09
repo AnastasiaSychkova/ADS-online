@@ -10,10 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.user.NewPassword;
 import ru.skypro.homework.dto.user.UpdateUser;
 import ru.skypro.homework.dto.user.UserDto;
-import ru.skypro.homework.service.impl.ImageService;
 import ru.skypro.homework.service.impl.UserService;
 
-import java.io.IOException;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -54,7 +52,7 @@ public class UserController {
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile image) throws IOException {
+    public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile image) {
         userService.updateUserImageInDb(image, SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok().build();
     }

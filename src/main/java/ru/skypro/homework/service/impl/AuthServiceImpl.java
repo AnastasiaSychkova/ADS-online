@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.service.AuthService;
 
+/** Сервис для работы с авторизацией пользователей */
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -22,6 +23,8 @@ public class AuthServiceImpl implements AuthService {
         this.userService = userService;
     }
 
+
+    /** Метод для входа в приложение */
     @Override
     public boolean login(String userName, String password) {
         if (!manager.userExists(userName)) {
@@ -31,6 +34,8 @@ public class AuthServiceImpl implements AuthService {
         return encoder.matches(password, userDetails.getPassword());
     }
 
+
+    /** Метод для регистрации */
     @Override
     public boolean register(Register register) {
         if (manager.userExists(register.getUsername())) {
