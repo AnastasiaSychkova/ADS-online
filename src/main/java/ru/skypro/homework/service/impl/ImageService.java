@@ -7,28 +7,29 @@ import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.ImageRepository;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 
 @Service
 public class ImageService {
     private final ImageRepository imageRepository;
-    private final UserService userService;
-    public ImageService(ImageRepository imageRepository, UserService userService) {
+    public ImageService(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
-        this.userService = userService;
     }
 
-    public void updateUserAvatar(MultipartFile file, String login) throws IOException {
-        Image image = null;
-        if (file.getSize() != 0) {
-            image = toImageEntity(file);
-            imageRepository.save(image);
+  /*  public void updateUserAvatar(MultipartFile file, String login) throws IOException {
+        Image image;
+        if (file == null || file.getSize() == 0) {
+            throw new InputMismatchException();
         }
+
+        image = toImageEntity(file);
+        imageRepository.save(image);
 
         User user = userService.getUserByLogin(login);
 
         user.setImage(image);
         userService.updateUserImageDb(user);
-    }
+    }*/
 
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
@@ -38,16 +39,18 @@ public class ImageService {
         return image;
     }
 
-    public Image updateAdImage(MultipartFile file) throws IOException {
-        Image image = null;
-        if (file.getSize() != 0) {
-            image = toImageEntity(file);
-            imageRepository.save(image);
+    public Image updateImage(MultipartFile file) throws IOException {
+        Image image;
+        if (file == null || file.getSize() == 0) {
+            throw new InputMismatchException();
         }
+
+        image = toImageEntity(file);
+        imageRepository.save(image);
         return image;
     }
 
     public byte[] getImage(Long id){
-        return imageRepository.findById(id).get().getBytes();
+        return imageRepository.findImageById(id).getBytes();
     }
 }

@@ -41,7 +41,7 @@ public class AdService {
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
         adRepository.save(ad);
 
-        Image image1 = imageService.updateAdImage(image);
+        Image image1 = imageService.updateImage(image);
 
         ad.setImage(image1);
         adRepository.save(ad);
@@ -99,11 +99,15 @@ public class AdService {
         return adRepository.findById(id).map(ad -> ad.getAuthor().getEmail()).orElse(null);
     }
 
-    public void updateAdImageInDb(MultipartFile file, Long id) throws IOException {
-        Image image = imageService.updateAdImage(file);
-        Ad ad = findAdById(id);
+    public void updateAdImageInDb(MultipartFile file, Long id) {
+        try {
+            Image image = imageService.updateImage(file);
+            Ad ad = findAdById(id);
 
-        ad.setImage(image);
-        adRepository.save(ad);
+            ad.setImage(image);
+            adRepository.save(ad);
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
     }
 }
