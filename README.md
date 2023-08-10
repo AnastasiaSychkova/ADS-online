@@ -9,10 +9,6 @@
 - PostgreSQL
 - Liquibase
 
-Тестирование:
-- JUnit
-- Mockito
-
 Прочее:
 - Docker
 
