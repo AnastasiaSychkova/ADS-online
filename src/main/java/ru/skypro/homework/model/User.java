@@ -25,16 +25,20 @@ public class User {
     private String password;
     private String phone;
     private LocalDate registerDate;
+
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToOne(orphanRemoval = true)
+
+    @OneToOne
     @JoinColumn(name = "image_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Image image;
+
     @OneToMany(
             mappedBy = "author",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     @ToStringExclude
     private List<Ad> userAds;

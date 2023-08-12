@@ -31,7 +31,6 @@ public class CommentService {
 
 
     /** Метод для получения списка комментариев */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
     public CommentsDto getComments(Long id) {
         List<Comment> comments = commentRepository.findAllByAdId(id);
 
@@ -40,12 +39,14 @@ public class CommentService {
 
 
     /** Метод для создания и сохранения комментария */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
     public CommentDto createComment(Long id, String login, CreateOrUpdateComment createOrUpdateComment) {
         Comment comment = new Comment();
         Ad ad = adService.findAdById(id);
+        if(ad == null){
+            return null;
+        }
         User author = userService.getUserByLogin(login);
-        if (ad == null || author == null) {
+        if (author == null) {
             return null;
         }
 
@@ -60,31 +61,34 @@ public class CommentService {
 
 
     /** Метод для удаления комментария */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
-    public boolean deleteComment(Long id) {
+    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @commentService.authorNameByCommentId(#id)")
+    public boolean deleteComment(Long id, Long adId) {
+
         if (!commentRepository.existsById(id)) {
             return false;
+        }else {
+            commentRepository.deleteById(id);
+            return true;
         }
-        commentRepository.deleteById(id);
-        return true;
     }
 
 
     /** Метод для обновления комментария */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(commentService.authorNameByCommentId(id))")
-    public CommentDto updateComment(Long id, CreateOrUpdateComment createOrUpdateComment) {
+    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @commentService.authorNameByCommentId(#id)")
+    public CommentDto updateComment(Long id, CreateOrUpdateComment createOrUpdateComment, Long adId) {
         Comment comment = commentRepository.findCommentById(id);
         if (comment == null) {
             return null;
         }
 
         comment.setText(createOrUpdateComment.getText());
+        commentRepository.save(comment);
         return commentMapper.commentIntoCommentDto(comment);
     }
 
 
     /** Метод для получения из бд имени автора по id комментария */
     public String authorNameByCommentId(Long id){
-        return commentRepository.findById(id).map(comment -> comment.getAuthor().getEmail()).orElse(null);
+        return commentRepository.findById(id).map(comment -> comment.getAuthor().getEmail()).orElseThrow(RuntimeException::new);
     }
 }

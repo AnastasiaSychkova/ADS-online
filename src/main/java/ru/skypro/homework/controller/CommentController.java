@@ -38,18 +38,18 @@ public class CommentController {
 
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("adId") Long adId, @PathVariable("commentId") Long commentId) {
-        if(commentService.deleteComment(commentId)) {
+        if(commentService.deleteComment(commentId, adId)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable("adId") Long adId, @PathVariable("commentId") Long commentId, @RequestBody CreateOrUpdateComment comment) {
-        CommentDto commentDto= commentService.updateComment(commentId, comment);
+    public ResponseEntity<CommentDto> updateComment(@PathVariable("adId") Long adId, @PathVariable("commentId") Long commentId, @RequestBody CreateOrUpdateComment comment) {
+        CommentDto commentDto= commentService.updateComment(commentId, comment, adId);
         if(commentDto == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(commentDto);
     }
 }

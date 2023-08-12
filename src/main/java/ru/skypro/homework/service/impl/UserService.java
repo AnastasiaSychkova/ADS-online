@@ -105,8 +105,15 @@ public class UserService {
     /** Метод для обновления аватара */
     public void updateUserImageInDb(MultipartFile file, String login) {
         try {
-            Image image = imageService.updateImage(file);
+            Image image = null;
             User user = userRepository.findUserByEmailIgnoreCase(login);
+            if(user.getImage() == null){
+                 image = imageService.updateImage(file);
+            }else {
+                image = imageService.updateImageWithoutSaveInDb(file);
+                image.setId(user.getId());
+                imageService.save(image);
+            }
 
             user.setImage(image);
             userRepository.save(user);
