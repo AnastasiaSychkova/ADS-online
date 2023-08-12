@@ -15,7 +15,9 @@ import ru.skypro.homework.repository.AdRepository;
 
 import java.io.IOException;
 
-/** Сервис для работы с сущностью Ad */
+/**
+ * Сервис для работы с сущностью Ad
+ */
 @Service
 public class AdService {
 
@@ -36,12 +38,14 @@ public class AdService {
     }
 
 
-    /** Метод для создания и сохранения объявления в бд */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(userService.getUserByLogin(login))")
+    /**
+     * Метод для создания и сохранения объявления в бд
+     */
+    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @userService.getUserByLogin(#login)")
     public AdDto createAd(String login, MultipartFile image, CreateOrUpdateAdDto createOrUpdateAdDto) throws IOException {
         User user = userService.getUserByLogin(login);
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
-        adRepository.save(ad);
+        //adRepository.save(ad);
 
         Image image1 = imageService.updateImage(image);
 
@@ -52,8 +56,10 @@ public class AdService {
     }
 
 
-    /** Метод для получения FullAdDto */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
+    /**
+     * Метод для получения FullAdDto
+     */
+    // @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public FullAdDto getFullAd(Long id) {
         Ad ad = adRepository.findAdById(id);
         if (ad == null) {
@@ -63,8 +69,10 @@ public class AdService {
     }
 
 
-    /** Метод для удаления объявления */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
+    /**
+     * Метод для удаления объявления
+     */
+    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public boolean deleteAd(Long id) {
         if (!adRepository.existsById(id)) {
             return false;
@@ -74,8 +82,10 @@ public class AdService {
     }
 
 
-    /** Метод для изменения объявления */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
+    /**
+     * Метод для изменения объявления
+     */
+    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public AdDto updateAd(Long id, CreateOrUpdateAdDto createOrUpdateAdDto) {
         Ad ad = adRepository.findAdById(id);
 
@@ -93,34 +103,44 @@ public class AdService {
     }
 
 
-    /** Метод для получения списка объявлений */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(userService.getUserByLogin(login))")
+    /**
+     * Метод для получения списка объявлений
+     */
+    //  @PreAuthorize("hasRole('ADMIN') OR authentication.name == @userService.getUserByLogin(#login)")
     public AdsDto getMyAds(String login) {
         User user = userService.getUserByLogin(login);
         return adMapper.adIntoAdsDto(user.getUserAds());
     }
 
 
-    /** Метод для получения объявления по id */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
-    public Ad findAdById(Long id){
+    /**
+     * Метод для получения объявления по id
+     */
+    // @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
+    public Ad findAdById(Long id) {
         return adRepository.findAdById(id);
     }
 
-    public String getAdAuthorName(Long id){
-        return adRepository.findById(id).map(ad -> ad.getAuthor().getEmail()).orElse(null);
+    public String getAdAuthorName(Long id) {
+        return adRepository.findById(id).map(ad -> ad.getAuthor().getEmail()).orElseThrow(RuntimeException::new);
     }
 
 
-    /** Метод для добавления/изменения картинки */
+    /**
+     * Метод для добавления/изменения картинки
+     */
+    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public void updateAdImageInDb(MultipartFile file, Long id) {
         try {
-            Image image = imageService.updateImage(file);
             Ad ad = findAdById(id);
+
+            Image image = imageService.updateImageWithoutSaveInDb(file);
+            image.setId(ad.getId());
+            imageService.save(image);
 
             ad.setImage(image);
             adRepository.save(ad);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

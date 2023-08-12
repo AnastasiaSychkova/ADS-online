@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.service.AuthService;
 
 /** Сервис для работы с авторизацией пользователей */
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
 
     /** Метод для регистрации */
     @Override
-    public boolean register(Register register) {
+    public boolean register(Register register, Role role) {
         if (manager.userExists(register.getUsername())) {
             return false;
         }
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
                         .passwordEncoder(this.encoder::encode)
                         .password(register.getPassword())
                         .username(register.getUsername())
-                        .roles(register.getRole().name())
+                        .roles(role.name())
                         .build());
 
         userService.saveUser(register, register.getRole(), this.encoder.encode(register.getPassword()));

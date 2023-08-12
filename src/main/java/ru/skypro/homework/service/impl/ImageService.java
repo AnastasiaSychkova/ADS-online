@@ -41,6 +41,24 @@ public class ImageService {
     }
 
 
+    /** Метод для обновления картинки без сохранения в бд */
+    public Image updateImageWithoutSaveInDb(MultipartFile file) throws IOException {
+        Image image;
+        if (file == null || file.getSize() == 0) {
+            throw new InputMismatchException();
+        }
+
+        image = toImageEntity(file);
+        return image;
+    }
+
+
+    /** Метод для сохранения */
+    public void save(Image image){
+        imageRepository.save(image);
+    }
+
+
     /** Метод для получения массива byte */
     public byte[] getImage(Long id){
         Image image = imageRepository.findImageById(id);

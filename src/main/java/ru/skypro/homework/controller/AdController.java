@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +38,7 @@ public class AdController {
                                         @RequestPart("image") MultipartFile image) throws IOException {
 
         AdDto adDto = adService.createAd(SecurityContextHolder.getContext().getAuthentication().getName(), image, createOrUpdateAdDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return  new ResponseEntity<>(adDto,HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
