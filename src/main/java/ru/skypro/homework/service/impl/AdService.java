@@ -41,7 +41,6 @@ public class AdService {
     /**
      * Метод для создания и сохранения объявления в бд
      */
-    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @userService.getUserByLogin(#login)")
     public AdDto createAd(String login, MultipartFile image, CreateOrUpdateAdDto createOrUpdateAdDto) throws IOException {
         User user = userService.getUserByLogin(login);
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
@@ -59,7 +58,6 @@ public class AdService {
     /**
      * Метод для получения FullAdDto
      */
-    // @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public FullAdDto getFullAd(Long id) {
         Ad ad = adRepository.findAdById(id);
         if (ad == null) {
@@ -106,7 +104,6 @@ public class AdService {
     /**
      * Метод для получения списка объявлений
      */
-    //  @PreAuthorize("hasRole('ADMIN') OR authentication.name == @userService.getUserByLogin(#login)")
     public AdsDto getMyAds(String login) {
         User user = userService.getUserByLogin(login);
         return adMapper.adIntoAdsDto(user.getUserAds());
@@ -116,7 +113,6 @@ public class AdService {
     /**
      * Метод для получения объявления по id
      */
-    // @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.name.equals(adService.getAdAuthorName(id))")
     public Ad findAdById(Long id) {
         return adRepository.findAdById(id);
     }

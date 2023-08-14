@@ -1,10 +1,8 @@
 package ru.skypro.homework.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +14,6 @@ import ru.skypro.homework.service.impl.AdService;
 
 import java.io.IOException;
 
-@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
