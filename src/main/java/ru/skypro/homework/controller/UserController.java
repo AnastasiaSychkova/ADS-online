@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.user.NewPassword;
 import ru.skypro.homework.dto.user.UpdateUser;
 import ru.skypro.homework.dto.user.UserDto;
+import ru.skypro.homework.service.impl.AuthServiceImpl;
 import ru.skypro.homework.service.impl.UserService;
 
 
@@ -20,14 +21,16 @@ import ru.skypro.homework.service.impl.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final AuthServiceImpl authService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthServiceImpl authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
-        if (userService.setPassword(SecurityContextHolder.getContext().getAuthentication().getName(), newPassword)) {
+        if (authService.setPassword(SecurityContextHolder.getContext().getAuthentication().getName(), newPassword)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

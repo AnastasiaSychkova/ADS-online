@@ -10,7 +10,7 @@ public class UserMapper {
 
     /** Метод для конвертации User в UserDto */
     public UserDto userIntoUserDto(User user){
-        return new UserDto(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getImage() == null? null: ("/images/" + user.getImage().getId()));
+        return new UserDto(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),user.getRole().name(), user.getImage() == null? null: ("/images/" + user.getImage().getId()));
     }
 
 

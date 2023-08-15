@@ -1,6 +1,5 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.ad.AdDto;
@@ -44,7 +43,6 @@ public class AdService {
     public AdDto createAd(String login, MultipartFile image, CreateOrUpdateAdDto createOrUpdateAdDto) throws IOException {
         User user = userService.getUserByLogin(login);
         Ad ad = new Ad(user, createOrUpdateAdDto.getPrice(), createOrUpdateAdDto.getTitle(), createOrUpdateAdDto.getDescription());
-        //adRepository.save(ad);
 
         Image image1 = imageService.updateImage(image);
 
@@ -70,7 +68,6 @@ public class AdService {
     /**
      * Метод для удаления объявления
      */
-    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public boolean deleteAd(Long id) {
         if (!adRepository.existsById(id)) {
             return false;
@@ -83,7 +80,6 @@ public class AdService {
     /**
      * Метод для изменения объявления
      */
-    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public AdDto updateAd(Long id, CreateOrUpdateAdDto createOrUpdateAdDto) {
         Ad ad = adRepository.findAdById(id);
 
@@ -118,14 +114,13 @@ public class AdService {
     }
 
     public String getAdAuthorName(Long id) {
-        return adRepository.findById(id).map(ad -> ad.getAuthor().getEmail()).orElseThrow(RuntimeException::new);
+        return findAdById(id).getAuthor().getEmail();
     }
 
 
     /**
      * Метод для добавления/изменения картинки
      */
-    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     public void updateAdImageInDb(MultipartFile file, Long id) {
         try {
             Ad ad = findAdById(id);

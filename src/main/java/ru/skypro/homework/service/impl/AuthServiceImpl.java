@@ -7,6 +7,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.dto.user.NewPassword;
 import ru.skypro.homework.service.AuthService;
 
 /** Сервис для работы с авторизацией пользователей */
@@ -51,6 +52,27 @@ public class AuthServiceImpl implements AuthService {
                         .build());
 
         userService.saveUser(register, register.getRole(), this.encoder.encode(register.getPassword()));
+        return true;
+    }
+
+    /** Метод для изменения пароля */
+    public boolean setPassword(String login, NewPassword newPassword) {
+        if (!encoder.matches(newPassword.getCurrentPassword(), manager.loadUserByUsername(login).getPassword())) {
+            return false;
+        }
+
+        ru.skypro.homework.model.User user = userService.setPasswordInDb(login, this.encoder.encode(newPassword.getNewPassword()));
+        if (user == null) {
+            return false;
+        }
+
+        manager.updateUser(
+                org.springframework.security.core.userdetails.User.builder()
+                        .passwordEncoder(this.encoder::encode)
+                        .password(newPassword.getNewPassword())
+                        .username(login)
+                        .roles(user.getRole().name())
+                        .build());
         return true;
     }
 
