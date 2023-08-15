@@ -3,6 +3,7 @@ package ru.skypro.homework.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,7 @@ public class AdController {
         return ResponseEntity.ok(fullAdDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAd(@PathVariable("id") Long id) {
         if(adService.deleteAd(id)) {
@@ -56,6 +58,7 @@ public class AdController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     @PatchMapping("/{id}")
     public ResponseEntity<AdDto> updateAd(@PathVariable("id") Long id, @RequestBody CreateOrUpdateAdDto createOrUpdateAdDto) {
         AdDto adDto = adService.updateAd(id,createOrUpdateAdDto);
@@ -71,6 +74,7 @@ public class AdController {
         return ResponseEntity.ok(adsDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') OR authentication.name == @adService.getAdAuthorName(#id)")
     @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateImage(@PathVariable("id") Long id,
                                          @RequestPart MultipartFile image) {

@@ -1,6 +1,5 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.comment.CommentDto;
 import ru.skypro.homework.dto.comment.CommentsDto;
@@ -61,7 +60,6 @@ public class CommentService {
 
 
     /** Метод для удаления комментария */
-    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @commentService.authorNameByCommentId(#id)")
     public boolean deleteComment(Long id, Long adId) {
 
         if (!commentRepository.existsById(id)) {
@@ -74,7 +72,6 @@ public class CommentService {
 
 
     /** Метод для обновления комментария */
-    @PreAuthorize("hasRole('ADMIN') OR authentication.name == @commentService.authorNameByCommentId(#id)")
     public CommentDto updateComment(Long id, CreateOrUpdateComment createOrUpdateComment, Long adId) {
         Comment comment = commentRepository.findCommentById(id);
         if (comment == null) {
@@ -89,6 +86,6 @@ public class CommentService {
 
     /** Метод для получения из бд имени автора по id комментария */
     public String authorNameByCommentId(Long id){
-        return commentRepository.findById(id).map(comment -> comment.getAuthor().getEmail()).orElseThrow(RuntimeException::new);
+        return commentRepository.findCommentById(id).getAuthor().getEmail();
     }
 }

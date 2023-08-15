@@ -3,6 +3,7 @@ package ru.skypro.homework.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.comment.CommentDto;
@@ -36,6 +37,7 @@ public class CommentController {
         return ResponseEntity.ok(commentDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') OR authentication.name == @commentService.authorNameByCommentId(#commentId)")
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("adId") Long adId, @PathVariable("commentId") Long commentId) {
         if(commentService.deleteComment(commentId, adId)) {
@@ -44,6 +46,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') OR authentication.name == @commentService.authorNameByCommentId(#commentId)")
     @PatchMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable("adId") Long adId, @PathVariable("commentId") Long commentId, @RequestBody CreateOrUpdateComment comment) {
         CommentDto commentDto= commentService.updateComment(commentId, comment, adId);

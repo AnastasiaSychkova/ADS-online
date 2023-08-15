@@ -4,15 +4,15 @@ import lombok.Data;
 
 @Data
 public class CommentDto {
-    private Long authorId;
+    private Long author;
     private String authorImage;
     private String authorFirstName;
     private Long createdAt;
     private Long pk;
     private String text;
 
-    public CommentDto(Long authorId, String authorImage, String authorFirstName, Long createdAt, Long pk, String text) {
-        this.authorId = authorId;
+    public CommentDto(Long author, String authorImage, String authorFirstName, Long createdAt, Long pk, String text) {
+        this.author = author;
         this.authorImage = authorImage;
         this.authorFirstName = authorFirstName;
         this.createdAt = createdAt;
