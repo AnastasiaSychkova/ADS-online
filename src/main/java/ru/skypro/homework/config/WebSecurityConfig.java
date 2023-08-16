@@ -19,7 +19,6 @@ import javax.sql.DataSource;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-//@EnableMethodSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     private final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
@@ -33,7 +32,9 @@ public class WebSecurityConfig {
             "/login",
             "/register",
             "/ads",
-            "/images/**"
+            "/ads/*/image",
+            "/users",
+            "/users/*/image"
     };
 
     public WebSecurityConfig(DataSource dataSource) {
